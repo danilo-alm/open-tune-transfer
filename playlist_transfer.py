@@ -29,7 +29,9 @@ class PlaylistTransfer:
     def __check_match(str1: str, str2: str) -> bool:
         return fuzz.ratio(str1, str2) > 70
 
-    def __transfer_playlist_all_at_once(self, playlist_id: str, songs: List[Song]):
+    def __transfer_playlist_all_at_once(
+        self, playlist_id: str, songs: List[Song]
+    ) -> List[Song]:
         not_match = []
         found_song_ids = []
 
@@ -61,7 +63,7 @@ class PlaylistTransfer:
         self,
         playlist_id: str,
         songs: List[Song],
-    ):
+    ) -> List[Song]:
         not_match = []
 
         for song in songs:
@@ -83,10 +85,12 @@ class PlaylistTransfer:
 
         return not_match
 
-    def transfer_playlist(self, playlist: Playlist, at_once: bool = False):
+    def transfer_playlist(
+        self, playlist: Playlist, at_once: bool = False
+    ) -> List[Song]:
         songs = self.origin.get_playlist_songs(playlist.id)
-        if not songs:
-            return
+        if songs is None:
+            raise ValueError(f"Could not retrieve songs from playlist {playlist.name}")
 
         song_names = [song.name for song in songs]
         formatted_song_list = "\n".join(
@@ -94,12 +98,11 @@ class PlaylistTransfer:
         )
         self.logger.debug(f"Songs to transfer:\n{formatted_song_list}")
 
-        if not self.dry_run:
-            to_playlist = self.destination.create_playlist(
-                playlist.name, playlist.description
-            )
-        else:
-            to_playlist = "DRY-RUN"
+        to_playlist = (
+            "DRY-RUN"
+            if self.dry_run
+            else self.destination.create_playlist(playlist.name, playlist.description)
+        )
 
         self.logger.debug(f'Created playlist "{playlist.name}" with ID {to_playlist}')
 
