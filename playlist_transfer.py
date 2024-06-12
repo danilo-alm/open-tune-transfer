@@ -1,5 +1,5 @@
 import logging
-from typing import List, Union
+from typing import List, Optional
 
 from thefuzz import fuzz
 
@@ -11,7 +11,7 @@ class PlaylistTransfer:
         self,
         origin: MusicService,
         destination: MusicService,
-        logger: Union[logging.Logger, None] = None,
+        logger: Optional[logging.Logger] = None,
         dry_run: bool = False,
     ) -> None:
         self.origin = origin
