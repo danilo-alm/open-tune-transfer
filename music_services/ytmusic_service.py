@@ -15,16 +15,16 @@ class YoutubeMusicService(MusicService):
         else:
             self.yt = ytmusicapi.setup_oauth(filepath=oauth_file)
 
-    @property
-    def has_auth(self) -> bool:
+    @classmethod
+    def has_auth(cls) -> bool:
         return True
 
-    @property
-    def pretty_name(self) -> str:
+    @classmethod
+    def pretty_name(cls) -> str:
         return "Youtube Music"
 
-    @property
-    def arg_name(self) -> str:
+    @classmethod
+    def arg_name(cls) -> str:
         return "ytmusic"
 
     def __extract_playlist_info(self, playlist):

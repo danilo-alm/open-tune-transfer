@@ -8,16 +8,16 @@ class DeezerService(MusicService):
         self.client = deezer.Client()
         self.__user_id = input("Deezer User ID: ")
 
-    @property
-    def has_auth(self):
+    @classmethod
+    def has_auth(cls):
         return False
 
-    @property
-    def pretty_name(self):
+    @classmethod
+    def pretty_name(cls):
         return "Deezer"
 
-    @property
-    def arg_name(self):
+    @classmethod
+    def arg_name(cls):
         return "deezer"
 
     def __extract_playlist_info(self, playlist):

@@ -19,9 +19,9 @@ class Playlist:
 
 class MusicService(ABC):
 
-    @property
+    @classmethod
     @abstractmethod
-    def has_auth(self) -> bool:
+    def has_auth(cls) -> bool:
         """
         Indicates whether there is support for authentication.
 
@@ -30,9 +30,9 @@ class MusicService(ABC):
         """
         pass
 
-    @property
+    @classmethod
     @abstractmethod
-    def pretty_name(self) -> str:
+    def pretty_name(cls) -> str:
         """
         Provides a user-friendly name for the music service.
 
@@ -41,9 +41,9 @@ class MusicService(ABC):
         """
         pass
 
-    @property
+    @classmethod
     @abstractmethod
-    def arg_name(self) -> str:
+    def arg_name(cls) -> str:
         """
         Provides a short argument name for the music service.
 
