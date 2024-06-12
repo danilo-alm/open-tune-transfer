@@ -19,6 +19,11 @@ class Playlist:
 
 class MusicService(ABC):
 
+    # Attributes will be defined as methods, since I did not find a clean way
+    # of making attributes static when implementing the class (@property and
+    # @staticmethod cannot be combined). @classmethod is being used for
+    # static methods.
+
     @classmethod
     @abstractmethod
     def has_auth(cls) -> bool:
