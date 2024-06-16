@@ -4,9 +4,10 @@ from typing import List, Optional
 from thefuzz import fuzz
 
 from .music_services.music_service import MusicService, Playlist, Song
+from .music_services.spotify_service import SpotifyService
 
 
-class PlaylistTransfer:
+class PlaylistTransferer:
     def __init__(
         self,
         origin: MusicService,
@@ -16,7 +17,7 @@ class PlaylistTransfer:
     ) -> None:
         self.origin = origin
         self.destination = destination
-        self.logger = logger or PlaylistTransfer.__get_null_logger()
+        self.logger = logger or PlaylistTransferer.__get_null_logger()
         self.dry_run = dry_run
 
     @staticmethod
@@ -44,7 +45,7 @@ class PlaylistTransfer:
             )
 
             match = self.destination.search_song(song.name, song.artist)
-            if match and PlaylistTransfer.__check_match(song.name, match.name):
+            if match and PlaylistTransferer.__check_match(song.name, match.name):
                 self.logger.info(
                     f"Playlist {playlist_id}: found match: {match.name}. Song will be added to the playlist at the end"
                 )
@@ -73,7 +74,7 @@ class PlaylistTransfer:
 
             match = self.destination.search_song(song.name, song.artist)
 
-            if match and PlaylistTransfer.__check_match(song.name, match.name):
+            if match and PlaylistTransferer.__check_match(song.name, match.name):
                 self.logger.info(
                     f'Playlist {playlist_id}: Adding "{match.name}" to the playlist '
                 )
@@ -85,9 +86,7 @@ class PlaylistTransfer:
 
         return not_match
 
-    def transfer_playlist(
-        self, playlist: Playlist, at_once: bool = False
-    ) -> List[Song]:
+    def transfer_playlist(self, playlist: Playlist) -> List[Song]:
         songs = self.origin.get_playlist_songs(playlist.id)
         if songs is None:
             raise ValueError(f"Could not retrieve songs from playlist {playlist.name}")
@@ -107,6 +106,7 @@ class PlaylistTransfer:
         self.logger.debug(f'Created playlist "{playlist.name}" with ID {to_playlist}')
 
         # Not all services have endpoints for adding all songs at once
+        at_once = self.origin.__class__ in [SpotifyService]
         if at_once:
             self.logger.debug(
                 f"Target is {type(self.destination).__name__}, calling add_to_playlist_all_at_once"
