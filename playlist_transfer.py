@@ -3,8 +3,8 @@ from typing import List, Optional
 
 from thefuzz import fuzz
 
-from .music_services.music_service import MusicService, Playlist, Song
-from .music_services.spotify_service import SpotifyService
+from music_services.music_service import MusicService, Playlist, Song
+from music_services.spotify_service import SpotifyService
 
 
 class PlaylistTransferer:
