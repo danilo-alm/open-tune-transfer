@@ -33,6 +33,7 @@ def main():
         )
 
     origin, destination = get_services_from_args(args, services)
+    user_used_cli_args = origin and destination
 
     if not origin:
         print("Where do you want to import FROM?")
@@ -53,7 +54,9 @@ def main():
     LOGGER.debug("Initializing music services")
     origin, destination = initialize_services(origin, destination)
 
-    origin_playlists = choose_playlists(origin)
+    origin_playlists = (
+        origin.get_all_playlists() if user_used_cli_args else choose_playlists(origin)
+    )
 
     playlist_transferer = PlaylistTransferer(origin, destination, LOGGER, args.dry)
     for playlist in origin_playlists:
